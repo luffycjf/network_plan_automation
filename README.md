@@ -172,6 +172,7 @@ databasehost = 'localhost'
 ```
 <br/>
 如果有堆叠需求，可以参照如下定义：
+
 ![](http://119.28.225.12:81/hm14.png)<br/>
 从头规划可以./network_plan.py -c或者./network_plan.py -c 指定之前规划好的架构文件。<br/>
 ./network_plan.py -ca 指定特定的硬件版本文件<br/>
