@@ -1,0 +1,1 @@
+[{'role_num': '96', 'role_name': 'ASW', 'peer_roles': [{'peer_role_name': 'ASW', 'peer_role_num': '1'}, {'peer_role_name': 'PSW', 'peer_role_num': '2'}, {'peer_role_name': 'SE', 'peer_role_num': '40'}]}, {'role_num': '4', 'role_name': 'PSW', 'peer_roles': [{'peer_role_name': 'ASW', 'peer_role_num': '48'}]}]
