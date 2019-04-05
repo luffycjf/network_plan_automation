@@ -158,7 +158,7 @@ total 16
 ![](http://119.28.225.12:81/hm12.png)<br/>
 ![](http://119.28.225.12:81/hm13.png)<br/>
 
-最后附上github下载地址，目前还有很多功能待完善，硬件信息可以通过
+最后附上[github下载地址](https://github.com/luffycjf/network_plan_automation)，目前还有很多功能待完善，硬件信息可以通过
 ./network_plan.py -if xx.xlsx和./network_plan.py -ia xx.xlsx分别倒入物料和能力信息，当前hardware_model.sql数据库包含了h3c\hw\cisco\ruijie最新主流idc交换机及其物料信息。<br/>
 数据库导入方式
 mysql -u root -p hardware_model < hardware_model.sql
