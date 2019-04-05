@@ -160,6 +160,9 @@ total 16
 
 最后附上[github下载地址](https://github.com/luffycjf/network_plan_automation)，目前还有很多功能待完善，硬件信息可以通过
 ./network_plan.py -if xx.xlsx和./network_plan.py -ia xx.xlsx分别倒入物料和能力信息，当前hardware_model.sql数据库包含了h3c\hw\cisco\ruijie最新主流idc交换机及其物料信息。<br/>
+新建数据库
+mysql -u root -p
+create database hardware_model;
 数据库导入方式
 mysql -u root -p hardware_model < hardware_model.sql
 配置数据库的密码在config.py中：<br/>
