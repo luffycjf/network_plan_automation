@@ -124,6 +124,7 @@ def help():
     -if import hardware device information 
     -ia import hardware device abitlity
     -c Calculate scheme
+    -ca Calculate scheme by hardware version
     -h help
             
     '''
@@ -837,6 +838,69 @@ def calculateorder(hardware_version):
         for ar in arch_role[role]:
             if ar != 'port' and ar != 'linecard':
                 device_ability_list[dl][ar] = arch_role[role][ar]
+    print u'本次建设是否是新建，新建回车或者y回车，扩容请输入n回车'
+    new_build = raw_input('please input y/n for new build: ')
+    new_build = new_build.lower()
+    if new_build == 'n':
+        old_device_list = []
+        for act in arch_conn_table:
+            print u'请输入之前已经建设%s的设备序号'%act['role_name']
+            print 'please input %s num,default is 1-%s :'%(act['role_name'],act['role_num'])
+            num = raw_input()
+            arch_num = getnum(num)
+            all_num = [ an for an in arch_num if int(an) in range(1,int(act['role_num'])+1) ]
+            old_device_list +=  [act['role_name']+str(an) for an in all_num]
+        old_last_link_table = []
+        for lt in link_table:
+            if lt[0] not in old_device_list and lt[2] not in old_device_list:
+                continue
+            elif lt[0] not in old_device_list and lt[1] != '':
+                continue
+            elif lt[2] not in old_device_list and lt[3] != '':
+                continue
+            else:
+                old_last_link_table.append(lt)
+        old_device_ability_list = {}
+        for dl in old_device_list:
+            old_device_ability_list[dl] = {}
+            role = re.sub('\d','',dl)
+            linecard_num = [ arch_role[role]['port'][llt[1]]['linecard_num'] for llt in last_link_table if llt[0] == dl and arch_role[role]['port'][llt[1]].has_key('linecard_num')]
+            linecard_num += [ arch_role[role]['port'][llt[3]]['linecard_num'] for llt in last_link_table if llt[2] == dl and arch_role[role]['port'][llt[3]].has_key('linecard_num')]
+            linecard_num = set(linecard_num)
+            if linecard_num != []:
+                old_device_ability_list[dl]['linecard'] = {}
+                for ln in linecard_num:
+                    old_device_ability_list[dl]['linecard'][ln] = arch_role[role]['linecard'][ln]
+            port_num = [ llt[1] for llt in last_link_table if llt[0] == dl ]
+            port_num += [ llt[3] for llt in last_link_table if llt[2] == dl ] 
+            if port_num != []:
+                old_device_ability_list[dl]['module'] = {}
+                for pn in port_num:
+                    old_device_ability_list[dl]['module'][pn] = arch_role[role]['port'][pn]['module']
+            for ar in arch_role[role]:
+                if ar != 'port' and ar != 'linecard':
+                    old_device_ability_list[dl][ar] = arch_role[role][ar]
+        if old_device_ability_list != {}:
+            for odal in old_device_ability_list:
+                if device_ability_list.has_key(odal):
+                    n_device_ability = {}
+                    if device_ability_list[odal].has_key('linecard'):
+                        pop_list = []
+                        for daol in device_ability_list[odal]['linecard']:
+                            if daol in old_device_ability_list[odal]['linecard']:
+                                pop_list.append(daol)
+                        for pl in pop_list:
+                            device_ability_list[odal]['linecard'].pop(pl)
+                    n_device_ability['linecard'] = device_ability_list[odal]['linecard']
+                    if device_ability_list[odal].has_key('module'):
+                        pop_list = []
+                        for daom in device_ability_list[odal]['module']:
+                            if daom in old_device_ability_list[odal]['module']:
+                                pop_list.append(daom)
+                        for pl in pop_list:
+                            device_ability_list[odal]['module'].pop(pl)
+                    n_device_ability['module'] = device_ability_list[odal]['module']
+                    device_ability_list[odal] = n_device_ability
     device_type_dict = {'module':u'模块','linecard':u'板卡','fabriccard':u'交换网板','fan':u'风扇','power':u'电源','chassis':u'机框','monitoring':u'监控板','supervisor':u'引擎板'}
     order_list = []
     for dal in device_ability_list:
